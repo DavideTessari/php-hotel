@@ -61,7 +61,16 @@ $hotels = [
 </head>
 <body>
     <div class="container mt-5">
-        <!-- Tabella con Bootstrap -->
+        <!-- Form di filtraggio -->
+        <form class="d-flex gap-5" method="GET">
+            <div class="mb-3">
+                <label for="filter_parking" class="form-label">Filtra per parcheggio:</label>
+                <input type="checkbox" id="filter_parking" name="parking" value="true">
+            </div>
+            <button type="submit" class="btn btn-primary">Filtra</button>
+        </form>
+
+        <!-- Tabella degli hotel -->
         <h1>Lista degli hotel</h1>
         <table class="table">
             <thead>
@@ -74,7 +83,18 @@ $hotels = [
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($hotels as $hotel): ?>
+                <?php
+                // Filtraggio degli hotel se il parametro "parking" è impostato su "true"
+                $filteredHotels = $hotels;
+                if (isset($_GET['parking']) && $_GET['parking'] == 'true') {
+                    $filteredHotels = array_filter($hotels, function($hotel) {
+                        return $hotel['parking'] == true;
+                    });
+                }
+
+                // Iterazione sugli hotel filtrati
+                foreach ($filteredHotels as $hotel):
+                ?>
                     <tr>
                         <td><?php echo $hotel['name']; ?></td>
                         <td><?php echo $hotel['description']; ?></td>
